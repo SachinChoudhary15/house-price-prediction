@@ -1,0 +1,12 @@
+
+
+1. To run preprocessing.py           -> python src/preprocessing.py
+2. To run Feature_engineering.py     -> python src/Feature_engineering.py
+3. To run train.py                   -> python src/train.py
+4. To run evaluate.py                -> python src/evaluate.py
+
+   --> first run step 5 then in next terminal run step 6 
+   --> Note: Do not close step 5 terminal 
+   
+5. To run main.py                    -> uvicorn api.main:app --reload
+6. To run app.py                     -> streamlit run frontend/app.py
