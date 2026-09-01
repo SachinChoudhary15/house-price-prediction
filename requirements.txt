@@ -1,12 +1,15 @@
 
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-joblib
-fastapi
-pydantic
-uvicorn
-requests
-streamlit
+
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.8.0
+joblib==1.5.3
+
+fastapi==0.136.0
+pydantic==2.13.2
+uvicorn==0.44.0
+requests==2.33.1
+
+streamlit==1.56.0
+matplotlib==3.10.8
+seaborn==0.13.2

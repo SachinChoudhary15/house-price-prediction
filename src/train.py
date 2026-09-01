@@ -36,23 +36,27 @@ def train_model(input_file_path, model_output_path):
 
     # Hyperparameter tuning for Decision Tree Regressor
     param_distributions = {
-    "model__max_depth": [5, 10, 15],
-    "model__min_samples_split": [5, 10, 15, 20],
-    "model__min_samples_leaf": [2, 4, 6, 8],
-    "model__max_features": ['sqrt', 'log2', None]
+    "model__max_depth":[None,10,20,30,50],
+    "model__min_samples_split": [10, 20, 30, 40],
+    "model__min_samples_leaf": [5, 10, 15, 20],
+    "model__max_features": [None,"sqrt","log2"],
+    "model__ccp_alpha": [0.0, 0.001, 0.01]
     }
 
     random_search_dtr = RandomizedSearchCV(
     estimator=dtr_pipeline,
     param_distributions=param_distributions,
-    n_iter=20,
+
+    n_iter=25,
     cv=5,
     verbose=2,
     random_state=42,
-    n_jobs=1,  
-    scoring="neg_mean_squared_error",
+    n_jobs=-1,
+    scoring="r2",
     return_train_score=True
     )
+
+
 
     random_search_dtr.fit(x_train, y_train)
     best_dtr = random_search_dtr.best_estimator_
@@ -63,11 +67,18 @@ def train_model(input_file_path, model_output_path):
     dtr_train_r2 = r2_score(y_train, y_train_pred_dtr)
     dtr_test_r2 = r2_score(y_test, y_test_pred_dtr)
 
-    rmse = np.sqrt(mean_squared_error(y_test, y_test_pred_dtr))
-    mae = mean_absolute_error(y_test, y_test_pred_dtr)
+    actual_price_dtr = np.expm1(y_test)
+    predicted_price_dtr = np.expm1(y_test_pred_dtr)
 
-    print(f"\ndtr_train_r2: {dtr_train_r2}\n")
-    print(f"dtr_test_r2: {dtr_test_r2}\n")
+    original_r2_dtr = r2_score(actual_price_dtr,predicted_price_dtr)
+
+    rmse = np.sqrt(mean_squared_error(actual_price_dtr,predicted_price_dtr))
+
+    mae = mean_absolute_error(actual_price_dtr,predicted_price_dtr)
+
+    print(f"Original Price R2 Score DTR: {original_r2_dtr}")
+
+
 
     print(f"rmse: {rmse}\n")
     print(f"mae: {mae}\n")
@@ -77,11 +88,14 @@ def train_model(input_file_path, model_output_path):
 
     # Hyperparameter tuning for Random Forest Regressor
     param_distributions_rfr = {
+
     "model__n_estimators": [300, 400, 500],
     "model__max_depth": [10, 15, 20],
     "model__min_samples_split": [5, 10, 15, 20],
     "model__min_samples_leaf": [2, 4, 6, 8],
-    "model__max_features": ["sqrt", "log2"]
+    "model__max_features": ["sqrt", "log2"],
+    "model__bootstrap": [True],
+    "model__criterion": ["squared_error"],
 }
     
     random_search_rfr = RandomizedSearchCV(
@@ -91,9 +105,9 @@ def train_model(input_file_path, model_output_path):
     cv=5,
     verbose=2,
     random_state=42,
-    n_jobs=1,
-    scoring="neg_mean_squared_error",
-    return_train_score=True
+    n_jobs=-1,
+    scoring="r2",
+    return_train_score=True,
 )
 
     random_search_rfr.fit(x_train, y_train)
@@ -105,8 +119,15 @@ def train_model(input_file_path, model_output_path):
     rfr_train_r2 = r2_score(y_train, y_train_pred_rfr)
     rfr_test_r2 = r2_score(y_test, y_test_pred_rfr)
 
-    rmse = np.sqrt(mean_squared_error(y_test, y_test_pred_rfr))
-    mae = mean_absolute_error(y_test, y_test_pred_rfr)
+    actual_price = np.expm1(y_test)
+    predicted_price = np.expm1(y_test_pred_rfr)
+
+    original_r2 = r2_score(actual_price, predicted_price)
+
+    print(f"Original Price R2 Score: {original_r2}")
+
+    rmse = np.sqrt(mean_squared_error(actual_price, predicted_price))
+    mae = mean_absolute_error(actual_price, predicted_price)
 
     print(f"\nrfr_train_r2: {rfr_train_r2}\n")
     print(f"rfr_test_r2: {rfr_test_r2}\n")

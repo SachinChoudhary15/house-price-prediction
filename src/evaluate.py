@@ -1,11 +1,8 @@
 
-
-
-import pandas as pd 
-import numpy as np 
+import pandas as pd
+import numpy as np
 import joblib
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-from sklearn.model_selection import cross_val_score
 
 def load_data(file_path):
     return pd.read_csv(file_path)
@@ -17,19 +14,38 @@ def evaluate_model(model_path, test_data_path):
 
     # Load test data
     df_test = load_data(test_data_path)
+
     x_test = df_test.drop("price", axis=1)
     y_test = np.log1p(df_test["price"])
 
+    # Prediction
     y_pred = model.predict(x_test)
-    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    r2 = r2_score(y_test, y_pred)
-    mae = mean_absolute_error(y_test, y_pred)
+
+    log_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    log_r2 = r2_score(y_test,y_pred)
+    log_mae = mean_absolute_error(y_test,y_pred)
+
+    actual_price = np.expm1(y_test)
+    predicted_price = np.expm1(y_pred)
+
+    rmse = np.sqrt(mean_squared_error(actual_price,predicted_price))
+    r2 = r2_score(actual_price,predicted_price)
+    mae = mean_absolute_error(actual_price,predicted_price)
+
+    # Print Results
+    print(f"RMSE: {log_rmse}\n")
+    print(f"R²: {log_r2}\n")
+    print(f"MAE: {log_mae}\n")
 
     print(f"RMSE: {rmse}\n")
     print(f"R²: {r2}\n")
     print(f"MAE: {mae}\n")
 
 if __name__ == "__main__":
+
     model_path = "models/best_model.pkl"
     test_data_path = "data/processed/final_data.csv"
-    evaluate_model(model_path, test_data_path)
+    evaluate_model(model_path,test_data_path)
+
+
+

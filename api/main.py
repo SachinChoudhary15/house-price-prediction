@@ -31,6 +31,8 @@ class Data(BaseModel):
     sqft_lot15: int
     age_of_house: int
     renovated: int
+    total_rooms: int
+    has_basement: int
 
 
 @app.get("/")

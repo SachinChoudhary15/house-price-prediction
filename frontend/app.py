@@ -23,14 +23,17 @@ yr_built = st.number_input("Year Built", min_value=1900)
 yr_renovated = st.number_input("Year Renovated", min_value=0)
 
 zipcode = st.number_input("Zipcode", min_value=0)
-lat = st.number_input("Latitude")
-long = st.number_input("Longitude")
+lat = st.number_input("Latitude", min_value=-90.0, max_value=90.0)
+long = st.number_input("Longitude", min_value=-180.0, max_value=180.0)
 
-sqft_living15 = st.number_input("Sqft Living15", min_value=0)
-sqft_lot15 = st.number_input("Sqft Lot15", min_value=0)
+sqft_living15 = st.number_input("Sqft Living15", min_value=0.0)
+sqft_lot15 = st.number_input("Sqft Lot15", min_value=0.0)
 
 age_of_house = st.number_input("Age of House", min_value=0)
 renovated = st.number_input("Renovated (0/1)", min_value=0)
+
+total_rooms = st.number_input("Total Rooms", min_value=0)
+has_basement = st.number_input("Has Basement (0/1)", min_value=0)
 
 if st.button("Predict Price"):
 
@@ -51,13 +54,16 @@ if st.button("Predict Price"):
         "zipcode": int(zipcode),
         "lat": float(lat),
         "long": float(long),
-        "sqft_living15": int(sqft_living15),
-        "sqft_lot15": int(sqft_lot15),
+        "sqft_living15": float(sqft_living15),
+        "sqft_lot15": float(sqft_lot15),
         "age_of_house": int(age_of_house),
-        "renovated": int(renovated)
+        "renovated": int(renovated),
+        "total_rooms": int(total_rooms),
+        "has_basement": int(has_basement)
     }
 
-    url = "http://127.0.0.1:8000/predict"
+    # url = "http://127.0.0.1:8000/predict"
+    url = "http://api:8000/predict"
 
     try:
 
@@ -78,3 +84,4 @@ if st.button("Predict Price"):
         st.error("FastAPI server not running")
 
   
+

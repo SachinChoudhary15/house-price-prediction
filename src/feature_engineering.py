@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.preprocessing import LabelEncoder
+from datetime import datetime
+
 
 def load_data(file_path):
     return pd.read_csv(file_path)
@@ -23,8 +25,11 @@ def feature_engineering(input_file_path, output_file_path):
     df = load_data(input_file_path)
 
     # Create new features
-    df["age_of_house"] = 2026 - df["yr_built"]
+    current_year = datetime.now().year
+    df["age_of_house"] = current_year - df["yr_built"]
     df["renovated"] = (df["yr_renovated"] > 0).astype(int)
+    df["total_rooms"] = df["bedrooms"] + df["bathrooms"]
+    df["has_basement"] = (df["sqft_basement"] > 0).astype(int)
 
 
     df, encoders = encode_categorical_columns(df)

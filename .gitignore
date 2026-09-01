@@ -1,6 +1,7 @@
-
 HousePrice/
-__pycache__/
+**pycache**/
 *.pyc
 .env
-models/
+
+models/*.pkl
+!models/best_model.pkl
