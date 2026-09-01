@@ -63,7 +63,8 @@ if st.button("Predict Price"):
     }
 
     # url = "http://127.0.0.1:8000/predict"
-    url = "http://api:8000/predict"
+    # url = "http://api:8000/predict"
+    url = "https://house-price-prediction-d9bk.onrender.com/predict"
 
     try:
 
